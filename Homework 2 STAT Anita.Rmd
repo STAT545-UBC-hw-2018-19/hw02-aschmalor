@@ -1,0 +1,264 @@
+---
+title: "Homework 2"
+author: "Anita"
+date: "September 22, 2018"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+1. Load the packages 'tidyverse' and 'dplyr'
+    - Note that 'dplyr' gets automatically loaded with 'tidyverse'
+2. Load the dataset 'gapminder'. That is what will be explored
+```{r}
+library(tidyverse)
+library(gapminder)
+```
+
+____________________________________________________________________________________________________________
+
+#PART I: Smell test the data
+**Explore the gapminder object:**
+
+```{r}
+class(gapminder)#class gives information about the class of the dataset/variable
+head(gapminder)#head provides all columns for the first six rows, good to see what is in a dataset
+str(gapminder)#str explores the structure of the data frame 
+ncol(gapminder)#tells you how many columns there are in the data frame
+nrow(gapminder)#tells us how many rows there are in a data frame
+summary(gapminder)#provides the mean, median and Minimum and Maximum value for each variable in the dataset
+names(gapminder)#get the names of teh vriables in the dataset
+str(gapminder$country)
+str(gapminder$continent)
+str(gapminder$year)
+str(gapminder$lifeExp)
+str(gapminder$pop)
+str(gapminder$gdpPercap)
+```
+##*Questions and Responses*
+
+
+1. Is it a data.frame, a matrix, a vector, a list?
+
+   It is a data frame
+
+
+2. What is its class?
+
+   It's a tibble and a data frame
+
+
+3. How many variables/columns? 
+
+   There are 6 variables/columns in the gapminder dataset.
+
+
+4. How many rows/observations? 
+
+   There are 1704 rows/observations in the gapminder dataset.
+   
+   
+5. Can you get these facts about "extent" or "size" in more than one way? Can you imagine different functions being useful in    different contexts?
+
+To get the number of variables that are in a dataframe, you can use several functions, for example 'ncol', 'summary',       'head', or 'class'. Dpending on what the goal is, different functions may be more useful. For example, to count the number of variables, see their actual nams and also see at a glance that the vectors all contain data points, the 'head' function' is useful. To get an idea of the mean value of the variables contained, the 'summary' variable is useful, and if one is just interested in the number of variables and doesn't want to have to count them (which may be tedious when working with a large dataset) the 'class' or 'ncol' functions are useful.
+
+Similarly, to get the number of rows at just one glance the 'class' and 'nrow' function are useful. While the 'class' function provides additional information, the 'nrow' function spits out only the number of rows. So thta is useful when that is the only variable of interest.
+
+
+6. What data type is each variable?
+
+Country is a factor 142 levels.
+
+Continent is factor with 5 levels.
+
+Year is an integer.
+
+Life Expectancy is a number.
+
+Population is an integer.
+
+GDP per capita is a number.
+
+____________________________________________________________________________________________________________
+
+#PART II Exploring individual variables
+**Exploring the quantitative variable Life Expectancy**
+```{r}
+summary(gapminder$lifeExp)
+sd(gapminder$lifeExp)
+gapminder%>%
+  filter(lifeExp<23.7)
+gapminder%>%
+  filter(lifeExp>82.6)
+ggplot(gapminder, aes(lifeExp)) + 
+  geom_histogram(colour='red')
+a <- gapminder%>%
+ filter(continent=="Africa")
+  summary(a$lifeExp)
+w <- gapminder%>%
+  filter(continent!="Africa")
+  summary(w$lifeExp)
+a.recent <- gapminder%>%
+ filter((continent=="Africa")& 
+          year==2007)
+  summary(a.recent$lifeExp)
+ggplot(a.recent, aes(lifeExp)) + 
+  geom_histogram(color = 'grey', fill = 'yellow')
+w.recent <- gapminder%>%
+  filter((continent!="Africa")& 
+           year==2007)
+  summary(w.recent$lifeExp)
+ggplot(w.recent, aes(lifeExp)) + 
+  geom_histogram(colour='grey', fill='green')
+```
+
+
+###Description of the variable 'life expectancy'
+
+When combined across all 5 continents and years (from 1952 to 2007), then the mean life expecancy is 59.47 years (SD = 12.92) and it ranges from 23.6 years to 82.6 years. When exploring the data further using the filter function, it tirns out that Rwanda had a life expectancy of 23.6 years in 1992 while Japan had a life expectancy of 82.6 in 2007. This enormous difference in life expectancy between these two counties is shocing and shows that aggregate data across so many differnt regions and such a long time span tels us little about the conditions people live in in different places.
+
+Furthermore, the mean life expectancy of Africa across the entire time (from 1952 to 2007) was 48.87 years, and hence 10 years lower than that of the entire world combined (including Africa). The life expectancy of the rest of the world (excluding Africa) was 65.60 years. One might think that the stark discrepancy in life expectancy is driven by past data. However, a glance at the most recent year for which data is available shows that difference in life expectancy has further increased. While the life expectancy in Africa has increased by about 6 years to 54.81 that of the rest f the world has increased even more steeply and is now at 74.06 years.
+
+**Exploring the categorical variable Continent**
+```{r}
+levels(gapminder$continent)
+table(gapminder$continent)
+plot(gapminder$continent, main='Number of data points for each continent')
+```
+
+
+
+
+###Description of the variable 'continent'
+
+There are 5 levels of the variable 'continent'. In other words, the dataset includs information from 5 continents: Africa, Americas, Asia, Europe, and Oceania.
+
+As can be seen using the tabe function (or from the plot), Africa has the most data points, namely 624. The Amerias, Asia, and Europe fall in the middle and have each between 300 and 396 data points. And Oceania has only 24 data points.
+
+
+____________________________________________________________________________________________________________
+
+#PART III Exploring various plot types (for the variable Life Expectancy)
+**Exploring the quantitative variable Life Expectancy**
+
+Explore various plot types
+Make a few plots, probably of the same variable you chose to characterize numerically. You can use the plot types we went over in class (cm006) to get an idea of what you'd like to make. Try to explore more than one plot type. Just as an example of what I mean:
+
+A scatterplot of two quantitative variables.
+A plot of one quantitative variable. Maybe a histogram or densityplot or frequency polygon.
+A plot of one quantitative variable and one categorical. Maybe boxplots for several continents or countries.
+You don't have to use all the data in every plot! It's fine to filter down to one country or small handful of countries.
+
+
+## Scatterplot between GDP per capita and Life Expectancy
+```{r}
+ggplot(gapminder, aes(x=gdpPercap, y=lifeExp))+
+  geom_point(colour='green', size=3)
+```
+
+
+## Various histograms for the variable Life Expectancy
+
+**Histogram of life expectancy including all countries and years**
+```{r}
+ggplot(gapminder, aes(lifeExp)) + 
+  geom_histogram(binwidth = 5)
+```
+**Histogram of life expectancy including data points from all continents _EXCEPT Africa_ for the year 2007**
+```{r}
+ggplot(w.recent, aes(lifeExp)) + 
+  geom_histogram(binwidth = 2)
+```
+
+
+
+
+As we can see in the histogram, there is an outlier where life expectancy seems to be much lower than in the other countries.
+
+**Histogram of life expectancy including data points from _Africa ONLY_ for the year 2007**
+```{r}
+ggplot(a.recent, aes(lifeExp)) + 
+  geom_histogram(binwidth = 2)
+```
+
+
+
+We can see in this histogram that the variability in life expecatncy within Africa is greater than that of the rest of the world. Most countries in 2007 in Africa had a life expectancy somewhere between 39 and 61 years, but there are also quite a few countries with a much higher ife expectancy, some have even a life expectancy of well over 70. 
+
+**Histogram including kernel density plot of life expectancy including data points from all continents _EXCEPT Africa_ for the year 2007**
+
+```{r}
+ggplot(w.recent, aes(lifeExp)) +
+  geom_histogram(aes(y=..density..), fill='pink', bw=5) +#this .. part in here is to map the histogram scale   #onto the density plot
+  geom_density(bw=0.3, colour='brown')
+```
+
+
+
+
+**Histogram including kernel density plot of life expectancy including data points from _Africa ONLY_ for the year 2007**
+```{r}
+ggplot(a.recent, aes(lifeExp)) +
+  geom_histogram(aes(y=..density..), fill='violet', bw=5) +#this .. part in here is to map the histogram scale   #onto the density plot
+  geom_density(bw=0.3, colour='purple')
+```
+
+
+
+
+
+
+
+## Box plots for the life expectancy of  _2007 ONLY_ broken down by continents
+```{r}
+y<-filter(gapminder, year==2007)%>%
+ggplot(aes(continent, lifeExp)) + 
+  scale_y_log10()+ 
+  geom_boxplot()
+y
+```
+
+## Box plots in conjunction with violin plots for the life expectancy of  _2007 ONLY_ broken down by continents
+```{r}
+y + geom_violin() #Note, I stored the box plot in y above, so that I don't have to retype everything
+```
+
+
+
+##Box plots in conjunction with violin plotswith data points (jitter) for the life expectancy of  _2007 ONLY_ broken down by continents
+```{r}
+y + geom_jitter(alpha=0.1)
+```
+
+
+
+As can be seen from this plot, there are realtively few data points for each continent for 2007. In particular, in Oceania there are only 2 data points.
+
+
+
+## Time/Line Plots
+
+Create a plot for countries from all continents except Africa showing the average life expectancy as a function of the year (ranging from 1961 to 2007).
+```{r}
+gapminder%>%
+  select(continent, country,year, lifeExp)%>%
+  filter(!(continent=='Africa')
+         & year > 1960)%>%
+  ggplot(aes(year, lifeExp))+
+  geom_line(aes(group=country), alpha=0.2) +
+  geom_point(colour='brown', size=3)
+```
+
+
+
+#Additional Exploration
+
+##Table showing data for African countries in 2007
+```{r}
+t<-gapminder%>%
+  filter(continent=='Africa' & year > 2006)%>%
+  select(country, lifeExp, pop, gdpPercap )
+knitr::kable(t)
+
+```
+
